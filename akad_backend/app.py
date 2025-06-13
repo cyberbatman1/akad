@@ -1,27 +1,26 @@
-# main_app.py
+# akad_backend/app.py
 
-# Import the Flask class from the flask package.
-# Flask is the micro-framework we'll use to build our web application.
+# Import Flask and our new Config object
 from flask import Flask
+from .config import Config
 
-# Create an instance of the Flask class. 
-# __name__ is a special Python variable that gets the name of the current module.
-# Flask uses this to know where to look for resources like templates and static files.
+# Create an instance of the Flask class.
 app = Flask(__name__)
 
-# This is a route decorator. It tells Flask what URL should trigger our function.
-# In this case, the root URL ('/') will trigger the home() function.
+# Load the application's configuration from the Config object
+# This will apply all the settings we defined in config.py
+app.config.from_object(Config)
+
 @app.route("/")
 def home():
     """This function runs when someone visits the root URL of our app."""
-    # The function returns a simple string that will be displayed in the browser.
-    return "Welcome to the Akad Backend!"
+    # For now, we return a simple message.
+    return "Welcome to the Akad Backend! (Secure Edition)"
 
-# This is a standard Python construct.
-# The code inside this 'if' block will only run when the script is executed directly
-# (e.g., by running 'python app.py'), not when it's imported by another script.
+# The 'if' block now checks the configuration to decide whether to run in debug mode.
+# We no longer pass `debug=True` directly to `app.run()`.
 if __name__ == "__main__":
-    # This starts the Flask development server.
-    # debug=True enables the debugger, which provides helpful error messages
-    # and automatically reloads the server when you make code changes.
-    app.run(debug=True)
+    # Flask's `app.run()` will automatically use the DEBUG setting from `app.config`.
+    # The host='0.0.0.0' makes the server accessible from other devices on the network.
+    # The port is explicitly set to 5000.
+    app.run(host='0.0.0.0', port=5000)
